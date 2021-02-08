@@ -1,0 +1,46 @@
+{
+	"name": "chart",
+	"version": "1.0.0",
+	"description": "**_人生不满百，何有千岁忧_**",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"precommit": "eslint src/**/*.{js,ts}",
+		"dev": "vite",
+		"build": "vite build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LifeOrLife/chart.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/LifeOrLife/chart/issues"
+	},
+	"homepage": "https://github.com/LifeOrLife/chart#readme",
+	"dependencies": {},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^4.14.2",
+		"@typescript-eslint/parser": "^4.14.2",
+		"eslint": "^7.19.0",
+		"husky": "^4.3.8",
+		"lint-staged": "^10.5.4",
+		"prettier": "^2.2.1",
+		"typescript": "^4.1.3",
+		"vite": "^2.0.0-beta.65"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"src/**/*.{js,ts}": [
+			"prettier --write",
+			"eslint --cache --fix",
+			"git add ."
+		]
+	}
+}
