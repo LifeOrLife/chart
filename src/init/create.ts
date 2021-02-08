@@ -8,7 +8,7 @@ interface options {
 	y: Array<string | number>;
 	type: string;
 }
-type dots = Array<{ x: number; y: number; r: number }>;
+type dots = Array<{ x: number; y: number; r: number; w?: number; h?: number }>;
 
 export default class CreateChart {
 	container: HTMLElement;
@@ -17,6 +17,8 @@ export default class CreateChart {
 	width: number;
 	height: number;
 	points?: dots;
+	options?: options;
+	barW?: number; // 柱状图初始化计算出来的宽度
 	moveHandle: (e: Event) => void;
 	constructor(options: params) {
 		const el = document.querySelector(options.el as string) as HTMLElement;
@@ -53,11 +55,12 @@ export default class CreateChart {
 			const ev = e as WheelEvent;
 			const x = ev.offsetX;
 			const y = ev.offsetY;
-			this.judgeThePos(x, y);
+			this.startJudge(x, y);
 		};
 	}
 	renderOptions(option: options): void {
 		this.calculatePoint(option);
+		this.options = option;
 	}
 	calculatePoint(option: options): void {
 		if (!this.container) {
@@ -91,7 +94,8 @@ export default class CreateChart {
 			this.renderLine();
 		}
 		if (option.type === 'bar') {
-			this.renderBar();
+			this.calculateBar();
+			this.startRenderBar();
 		}
 	}
 	addEvent(): void {
@@ -100,7 +104,16 @@ export default class CreateChart {
 	rmoveEvent(): void {
 		this.canvas.removeEventListener('mousemove', this.moveHandle);
 	}
-	judgeThePos(x: number, y: number): void {
+	startJudge(x: number, y: number): void {
+		const type = this.options.type;
+		if (type === 'line') {
+			this.judgeThePosLine(x, y);
+		}
+		if (type === 'bar') {
+			this.judgeThePosBar(x, y);
+		}
+	}
+	judgeThePosLine(x: number, y: number): void {
 		let _x, _y, dis, index;
 		const len = this.points.length;
 		let isIn = false;
@@ -161,8 +174,27 @@ export default class CreateChart {
 			ctx.restore();
 		});
 	}
-	renderBar() {
-		const ctx = this.ctx;
+	judgeThePosBar(x: number, y: number): void {
+		let isIn = false;
+		const point = this.points,
+			index;
+		for (let i = 0; i < point.length; i++) {
+			const p = point[i];
+			// 此时绘制的柱状图，从canvas底部开始绘制，所以暂时只判断状态图的头部
+			if (x >= p.x - p.w / 2 && x <= p.x + p.w / 2 && y >= p.y) {
+				isIn = true;
+				index = i;
+				break;
+			}
+		}
+		if (isIn) {
+			this.barScale(isIn, index);
+		} else {
+			this.barScale(isIn);
+		}
+	}
+
+	calculateBar(): void {
 		const point = this.points;
 		let w = point[1].x - point[0].x;
 		w = w * 0.6;
@@ -172,10 +204,31 @@ export default class CreateChart {
 		if (w >= 50) {
 			w = 50;
 		}
+		point.forEach((p) => {
+			p.w = w;
+			p.h = this.height - p.y;
+		});
+		this.barW = w;
+	}
+	barScale(isIn: boolean, index?: number): void {
+		this.canvas.style.cursor = isIn ? 'pointer' : 'default';
+		const point = this.points;
+		point.forEach((p, i) => {
+			p.w = this.barW;
+			if (isIn && i === index) {
+				p.w = this.barW + 5;
+			}
+		});
+		this.clearRect();
+		this.startRenderBar();
+	}
+	startRenderBar(): void {
+		const point = this.points;
+		const ctx = this.ctx;
 		ctx.save();
 		ctx.fillStyle = 'aqua';
 		point.forEach((p) => {
-			ctx.fillRect(p.x - w / w, p.y, w, this.height - p.y);
+			ctx.fillRect(p.x - p.w / 2, p.y, p.w, p.h);
 			ctx.fill();
 		});
 		ctx.restore();
