@@ -57,11 +57,9 @@ export default class CreateChart {
 		};
 	}
 	renderOptions(option: options): void {
-		if (option.type === 'line') {
-			this.drawLine(option);
-		}
+		this.calculatePoint(option);
 	}
-	drawLine(option: options): void {
+	calculatePoint(option: options): void {
 		if (!this.container) {
 			console.log('....');
 			return;
@@ -88,8 +86,13 @@ export default class CreateChart {
 			});
 		}
 		this.points = point;
-		this.renderLine();
 		this.addEvent();
+		if (option.type === 'line') {
+			this.renderLine();
+		}
+		if (option.type === 'bar') {
+			this.renderBar();
+		}
 	}
 	addEvent(): void {
 		this.canvas.addEventListener('mousemove', this.moveHandle);
@@ -157,5 +160,24 @@ export default class CreateChart {
 			ctx.stroke();
 			ctx.restore();
 		});
+	}
+	renderBar() {
+		const ctx = this.ctx;
+		const point = this.points;
+		let w = point[1].x - point[0].x;
+		w = w * 0.6;
+		if (w <= 20) {
+			w = 20;
+		}
+		if (w >= 50) {
+			w = 50;
+		}
+		ctx.save();
+		ctx.fillStyle = 'aqua';
+		point.forEach((p) => {
+			ctx.fillRect(p.x - w / w, p.y, w, this.height - p.y);
+			ctx.fill();
+		});
+		ctx.restore();
 	}
 }

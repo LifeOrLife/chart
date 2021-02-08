@@ -11,7 +11,7 @@ const draw = new CreateChart({
 	el: '#box'
 });
 draw.renderOptions({
-	type: 'line',
+	type: 'bar',
 	x: ['', '', '', '', '', ''],
 	y: [130, 40, 90, 200, 900, 600]
 });
