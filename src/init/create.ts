@@ -175,9 +175,9 @@ export default class CreateChart {
 		});
 	}
 	judgeThePosBar(x: number, y: number): void {
-		let isIn = false;
-		const point = this.points,
+		let isIn = false,
 			index;
+		const point = this.points;
 		for (let i = 0; i < point.length; i++) {
 			const p = point[i];
 			// 此时绘制的柱状图，从canvas底部开始绘制，所以暂时只判断状态图的头部
