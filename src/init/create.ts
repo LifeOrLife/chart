@@ -85,7 +85,7 @@ export default class CreateChart {
 			point.push({
 				x: x,
 				y: y,
-				r: 5
+				r: 4
 			});
 		}
 		this.points = point;
@@ -138,9 +138,9 @@ export default class CreateChart {
 	pointScale(isIn: boolean, index?: number): void {
 		this.canvas.style.cursor = isIn ? 'pointer' : 'default';
 		this.points.forEach((p, i) => {
-			p.r = 5;
+			p.r = 4;
 			if (isIn && index === i) {
-				p.r = 7;
+				p.r = 5;
 			}
 		});
 		this.clearRect();
