@@ -132,8 +132,58 @@ export default class CreateChart {
 			this.pointScale(isIn, index);
 		} else {
 			this.pointScale(isIn);
+			this.judgeTheLine(x, y);
 		}
 	}
+	// 判断鼠标是否移动到了线上
+	judgeTheLine(x: number, y: number): void {
+		const point = this.points;
+		let inLine = false;
+		for (let i = 0; i < point.length - 1; i++) {
+			if (this.isInTheLine(x, y, i)) {
+				inLine = true;
+				break;
+			}
+		}
+		if (inLine) {
+			this.renderLine(2);
+		} else {
+			this.renderLine();
+		}
+		this.canvas.style.cursor = inLine ? 'pointer' : 'default';
+	}
+	isInTheLine(x: number, y: number, index: number): boolean {
+		const pre = this.points[index];
+		const next = this.points[index + 1];
+		// 在线段上的点，必定在以两点组成的线段为对角线的矩形内，同时，斜率与该线段的斜率相同
+		/**
+		 * 目前只判断了线的宽度为 1 时候的情况，当线的宽度发生变化时，进行进行更多的判断
+		 * TODO
+		 *
+		 */
+		if (x >= pre.x && x <= next.x) {
+			let max, min;
+			if (pre.y >= next.y) {
+				max = pre.y;
+				min = next.y;
+			} else {
+				max = next.y;
+				min = pre.y;
+			}
+			if (y <= max && y >= min) {
+				let one = (max - min) / (next.x - pre.x);
+				let two =
+					(max - y) / (pre.y >= next.y ? x - pre.x : next.x - x);
+				const mul = 10;
+				one = Math.floor(one * mul);
+				two = Math.floor(two * mul);
+				// 比较斜率
+				return one === two;
+			}
+		}
+		return false;
+	}
+
 	// 数据点放大/还原
 	pointScale(isIn: boolean, index?: number): void {
 		this.canvas.style.cursor = isIn ? 'pointer' : 'default';
@@ -150,10 +200,15 @@ export default class CreateChart {
 	clearRect(): void {
 		this.ctx.clearRect(0, 0, this.width, this.height);
 	}
-	renderLine(): void {
+	renderLine(w?: number): void {
+		if (!w) {
+			w = 1;
+		}
 		const ctx = this.ctx;
 		const point = this.points;
+		ctx.save();
 		ctx.beginPath();
+		ctx.lineWidth = w;
 		ctx.strokeStyle = '#6cf';
 		point.map((p, i) => {
 			if (i === 0) {
@@ -163,6 +218,7 @@ export default class CreateChart {
 			}
 		});
 		ctx.stroke();
+		ctx.restore();
 		ctx.closePath();
 
 		point.forEach((p) => {
