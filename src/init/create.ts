@@ -178,7 +178,7 @@ export default class CreateChart {
 				one = Math.floor(one * mul);
 				two = Math.floor(two * mul);
 				// 比较斜率
-				return one === two;
+				return Math.abs(one - two) <= 0.1;
 			}
 		}
 		return false;
