@@ -1,4 +1,5 @@
 import { getStyle } from '../utils/getStyle';
+import { isInLine } from '../utils/contain/line';
 
 interface params {
 	[key: string]: string | HTMLElement | number;
@@ -7,6 +8,7 @@ interface options {
 	x: Array<string | number>;
 	y: Array<string | number>;
 	type: string;
+	lineWidth?: number;
 }
 type dots = Array<{ x: number; y: number; r: number; w?: number; h?: number }>;
 
@@ -19,6 +21,7 @@ export default class CreateChart {
 	points?: dots;
 	options?: options;
 	barW?: number; // 柱状图初始化计算出来的宽度
+	lineWidth = 1;
 	moveHandle: (e: Event) => void;
 	constructor(options: params) {
 		const el = document.querySelector(options.el as string) as HTMLElement;
@@ -59,6 +62,7 @@ export default class CreateChart {
 		};
 	}
 	renderOptions(option: options): void {
+		this.lineWidth = option.lineWidth || 1;
 		this.calculatePoint(option);
 		this.options = option;
 	}
@@ -146,40 +150,21 @@ export default class CreateChart {
 			}
 		}
 		if (inLine) {
-			this.renderLine(2);
+			this.renderLine(this.lineWidth + 2);
 		} else {
-			this.renderLine();
+			this.renderLine(this.lineWidth);
 		}
 		this.canvas.style.cursor = inLine ? 'pointer' : 'default';
 	}
 	isInTheLine(x: number, y: number, index: number): boolean {
 		const pre = this.points[index];
 		const next = this.points[index + 1];
-		// 在线段上的点，必定在以两点组成的线段为对角线的矩形内，同时，斜率与该线段的斜率相同
 		/**
-		 * 目前只判断了线的宽度为 1 时候的情况，当线的宽度发生变化时，进行进行更多的判断
-		 * TODO
-		 *
+		 * 在线段上的点，必定在以两点组成的线段为对角线的矩形内，同时，斜率与该线段的斜率相同
+		 * 计算出来的斜率和线段斜率可能不完全一致，允许保留一定的误差范围~~~
 		 */
-		if (x >= pre.x && x <= next.x) {
-			let max, min;
-			if (pre.y >= next.y) {
-				max = pre.y;
-				min = next.y;
-			} else {
-				max = next.y;
-				min = pre.y;
-			}
-			if (y <= max && y >= min) {
-				let one = (max - min) / (next.x - pre.x);
-				let two =
-					(max - y) / (pre.y >= next.y ? x - pre.x : next.x - x);
-				const mul = 10;
-				one = Math.floor(one * mul);
-				two = Math.floor(two * mul);
-				// 比较斜率
-				return Math.abs(one - two) <= 0.1;
-			}
+		if (pre && next) {
+			return isInLine(pre, next, x, y, this.ctx.lineWidth);
 		}
 		return false;
 	}
