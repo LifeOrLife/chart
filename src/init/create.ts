@@ -286,7 +286,10 @@ export default class CreateChart {
 	}
 
 	renderPie(option: options): void {
-		const sum = option.y.reduce((t, n) => Number(t) + Number(n), 0) as number;
+		const sum = option.y.reduce(
+			(t, n) => Number(t) + Number(n),
+			0
+		) as number;
 		const per = option.y.map((v) => {
 			v = Number(v);
 			return Math.floor((v / sum) * 100);
@@ -294,13 +297,13 @@ export default class CreateChart {
 		per[0] += 100 - per.reduce((v, n) => v + n, 0);
 		const x = this.width / 2;
 		const y = this.height / 2;
-		const r = Math.min(x, y) / 2 - 20;
+		const r = Math.min(this.width, this.height) / 2 - 80;
 		per.forEach((p, index) => {
 			this.ctx.save();
 			this.ctx.beginPath();
 			this.ctx.fillStyle = this.getColor(index);
 			const { start, end } = this.calcRadian(per, index);
-			this.ctx.arc(x, y, r + Math.floor(Math.random() * 10), start, end);
+			this.ctx.arc(x, y, r, start, end);
 			this.ctx.lineTo(x, y);
 			this.ctx.fill();
 			this.ctx.closePath();
