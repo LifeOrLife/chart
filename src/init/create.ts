@@ -22,6 +22,13 @@ export default class CreateChart {
 	options?: options;
 	barW?: number; // 柱状图初始化计算出来的宽度
 	lineWidth = 1;
+	colors: Array<string> = [
+		'#5470c6',
+		'#91cc75',
+		'#fac858',
+		'#ee6666',
+		'#73c0de'
+	];
 	moveHandle: (e: Event) => void;
 	constructor(options: params) {
 		const el = document.querySelector(options.el as string) as HTMLElement;
@@ -100,6 +107,9 @@ export default class CreateChart {
 		if (option.type === 'bar') {
 			this.calculateBar();
 			this.startRenderBar();
+		}
+		if (option.type === 'pie') {
+			this.renderPie(option);
 		}
 	}
 	addEvent(): void {
@@ -273,5 +283,59 @@ export default class CreateChart {
 			ctx.fill();
 		});
 		ctx.restore();
+	}
+
+	renderPie(option: options): void {
+		const sum = option.y.reduce((t, n) => Number(t) + Number(n), 0) as number;
+		const per = option.y.map((v) => {
+			v = Number(v);
+			return Math.floor((v / sum) * 100);
+		});
+		per[0] += 100 - per.reduce((v, n) => v + n, 0);
+		const x = this.width / 2;
+		const y = this.height / 2;
+		const r = Math.min(x, y) / 2 - 20;
+		per.forEach((p, index) => {
+			this.ctx.save();
+			this.ctx.beginPath();
+			this.ctx.fillStyle = this.getColor(index);
+			const { start, end } = this.calcRadian(per, index);
+			this.ctx.arc(x, y, r + Math.floor(Math.random() * 10), start, end);
+			this.ctx.lineTo(x, y);
+			this.ctx.fill();
+			this.ctx.closePath();
+			this.ctx.restore();
+		});
+	}
+	/**
+	 * 根据下标计算弧度值
+	 */
+	calcRadian(
+		y: Array<number>,
+		index: number
+	): { start: number; end: number } {
+		let start = 0;
+		const sum = y.reduce((v, n) => v + n, 0);
+		let _sum = 0;
+		const all = Math.PI * 2;
+		for (let i = 0; i < index; i++) {
+			_sum += y[i];
+		}
+		if (_sum) {
+			start = (_sum / sum) * all;
+		}
+		const end = ((_sum + y[index]) / sum) * all;
+
+		return {
+			start,
+			end
+		};
+	}
+
+	getColor(index: number): string {
+		if (index && this.colors[index]) {
+			return this.colors[index];
+		}
+		return '#' + Math.random().toString(16).slice(2, 8);
 	}
 }
