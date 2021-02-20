@@ -11,17 +11,27 @@ interface options {
 	lineWidth?: number;
 }
 type dots = Array<{ x: number; y: number; r: number; w?: number; h?: number }>;
-
+type pieType = {
+	x: number;
+	y: number;
+	start: number;
+	end: number;
+	color: string;
+	r: number;
+};
 export default class CreateChart {
 	container: HTMLElement;
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
 	width: number;
 	height: number;
+	ratio = 1;
 	points?: dots;
 	options?: options;
 	barW?: number; // 柱状图初始化计算出来的宽度
 	lineWidth = 1;
+	radius?: number; // 扇形图半径
+	pieList?: Array<pieType>;
 	colors: Array<string> = [
 		'#5470c6',
 		'#91cc75',
@@ -61,6 +71,7 @@ export default class CreateChart {
 		this.ctx = ctx;
 		this.width = width;
 		this.height = height;
+		this.ratio = ratio;
 		this.moveHandle = (e: Event) => {
 			const ev = e as WheelEvent;
 			const x = ev.offsetX;
@@ -125,6 +136,9 @@ export default class CreateChart {
 		}
 		if (type === 'bar') {
 			this.judgeThePosBar(x, y);
+		}
+		if (type === 'pie') {
+			this.judgeThePosPie(x, y);
 		}
 	}
 	judgeThePosLine(x: number, y: number): void {
@@ -298,16 +312,80 @@ export default class CreateChart {
 		const x = this.width / 2;
 		const y = this.height / 2;
 		const r = Math.min(this.width, this.height) / 2 - 80;
+		this.radius = r;
+		const pieList: Array<pieType> = [];
 		per.forEach((p, index) => {
-			this.ctx.save();
-			this.ctx.beginPath();
-			this.ctx.fillStyle = this.getColor(index);
+			const obj: pieType = {
+				x: 0,
+				y: 0,
+				start: 0,
+				end: 0,
+				color: '',
+				r: 0
+			};
+			const color = this.getColor(index);
 			const { start, end } = this.calcRadian(per, index);
-			this.ctx.arc(x, y, r, start, end);
-			this.ctx.lineTo(x, y);
-			this.ctx.fill();
-			this.ctx.closePath();
-			this.ctx.restore();
+			obj.x = x;
+			obj.y = y;
+			obj.start = start;
+			obj.end = end;
+			obj.r = r;
+			obj.color = color;
+			pieList.push(obj);
+			this.renderSinglePie(obj);
+		});
+		this.pieList = pieList;
+	}
+
+	judgeThePosPie(x: number, y: number): void {
+		const center_x = this.width / 2;
+		const center_y = this.height / 2;
+		const v_x = center_x - x;
+		const v_y = center_y - y;
+		const dis = Math.sqrt(v_x * v_x + v_y * v_y);
+		const per = this.pieList;
+		let isIn = false;
+		for (let i = 0; i < per.length; i++) {
+			if (dis <= per[i].r) {
+				this.initPieRadius();
+				this.renderSinglePie(per[i]);
+				isIn = true;
+				if (this.ctx.isPointInPath(x * this.ratio, y * this.ratio)) {
+					per[i].r = this.radius + 10;
+					this.rePaintPie();
+					break;
+				}
+			}
+		}
+		if (isIn) {
+			this.canvas.style.cursor = 'pointer';
+		} else {
+			this.canvas.style.cursor = 'default';
+			this.initPieRadius();
+			this.rePaintPie();
+		}
+	}
+	initPieRadius(): void {
+		this.pieList.forEach((p) => {
+			p.r = this.radius;
+		});
+	}
+	renderSinglePie(pie: pieType): void {
+		const { color, x, y, r, start, end } = pie;
+		this.ctx.save();
+		this.ctx.beginPath();
+		this.ctx.fillStyle = color;
+		this.ctx.arc(x, y, r, start, end);
+		this.ctx.lineTo(x, y);
+		this.ctx.fill();
+		this.ctx.closePath();
+		this.ctx.restore();
+	}
+	rePaintPie(): void {
+		const per = this.pieList;
+		this.clearRect();
+		per.forEach((p) => {
+			this.renderSinglePie(p);
 		});
 	}
 	/**
