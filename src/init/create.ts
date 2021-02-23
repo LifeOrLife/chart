@@ -1,5 +1,6 @@
 import { getStyle } from '../utils/getStyle';
 import { isInLine } from '../utils/contain/line';
+import { isInBar } from '../utils/contain/bar';
 
 interface params {
 	[key: string]: string | HTMLElement | number;
@@ -246,7 +247,7 @@ export default class CreateChart {
 		for (let i = 0; i < point.length; i++) {
 			const p = point[i];
 			// 此时绘制的柱状图，从canvas底部开始绘制，所以暂时只判断状态图的头部
-			if (x >= p.x - p.w / 2 && x <= p.x + p.w / 2 && y >= p.y) {
+			if (isInBar(p, x, y)) {
 				isIn = true;
 				index = i;
 				break;
