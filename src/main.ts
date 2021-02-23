@@ -7,16 +7,29 @@ try {
 	throw new Error('请在浏览器环境下运行');
 }
 
-const draw = new CreateChart({
-	el: '#box'
+const bar = new CreateChart({
+	el: '#bar'
 });
-// draw.renderOptions({
-// 	type: 'line',
-// 	x: ['', '', '', '', '', '', '', '', '', '', '', ''],
-// 	y: [130, 40, 90, 200, 900, 600, 459, 780, 900, 120, 650, 900]
-// });
 
-draw.renderOptions({
+bar.renderOptions({
+	type: 'bar',
+	x: ['', '', '', '', '', '', '', '', '', '', '', ''],
+	y: [130, 40, 90, 200, 900, 600, 459, 780, 900, 120, 650, 900]
+});
+
+const line = new CreateChart({
+	el: '#line'
+});
+line.renderOptions({
+	type: 'line',
+	x: ['', '', '', '', '', '', '', '', '', '', '', ''],
+	y: [130, 40, 90, 200, 900, 600, 459, 780, 900, 120, 650, 900]
+});
+
+const pie = new CreateChart({
+	el: '#pie'
+});
+pie.renderOptions({
 	type: 'pie',
 	x: ['', '', '', '', ''],
 	y: [130, 40, 90, 200, 900]

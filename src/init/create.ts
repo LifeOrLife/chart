@@ -347,10 +347,10 @@ export default class CreateChart {
 		let isIn = false;
 		for (let i = 0; i < per.length; i++) {
 			if (dis <= per[i].r) {
-				this.initPieRadius();
 				this.renderSinglePie(per[i]);
 				isIn = true;
 				if (this.ctx.isPointInPath(x * this.ratio, y * this.ratio)) {
+					this.initPieRadius();
 					per[i].r = this.radius + 10;
 					this.rePaintPie();
 					break;
