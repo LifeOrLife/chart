@@ -26,6 +26,7 @@ export default class CreateChart {
 	container: HTMLElement;
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
+
 	width: number;
 	height: number;
 	ratio = 1;
@@ -35,13 +36,6 @@ export default class CreateChart {
 	lineWidth = 1;
 	radius?: number; // 扇形图半径
 	pieList?: Array<pieType>;
-	colors: Array<string> = [
-		'#5470c6',
-		'#91cc75',
-		'#fac858',
-		'#ee6666',
-		'#73c0de'
-	];
 	moveHandle: (e: Event) => void;
 	constructor(options: params) {
 		const el = document.querySelector(options.el as string) as HTMLElement;
@@ -114,6 +108,8 @@ export default class CreateChart {
 			});
 		}
 		this.points = point;
+		this.options = option;
+
 		this.addEvent();
 		if (option.type === 'line') {
 			// this.renderLine();

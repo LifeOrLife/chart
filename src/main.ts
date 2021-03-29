@@ -13,7 +13,7 @@ const bar = new CreateChart({
 
 bar.renderOptions({
 	type: 'bar',
-	x: ['', '', '', '', '', '', '', '', '', '', '', ''],
+	x: Array.from('0'.repeat(12), (v, i) => '星期-' + i),
 	y: [130, 40, 90, 200, 900, 600, 459, 780, 900, 120, 650, 900]
 });
 

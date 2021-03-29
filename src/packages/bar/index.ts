@@ -20,7 +20,7 @@ function calculateBar(_ins: CreateChart): void {
 	}
 	point.forEach((p) => {
 		p.w = w;
-		p.h = _ins.height - p.y;
+		p.h = _ins.height - 50 - p.y; // 底部保留50px的距离
 	});
 	_ins.barW = w;
 }
@@ -35,6 +35,7 @@ function startRenderBar(_ins: CreateChart): void {
 		ctx.fill();
 	});
 	ctx.restore();
+	renderLabel();
 }
 
 function barScale(isIn: boolean, index?: number): void {
@@ -68,4 +69,22 @@ export function judgeThePosBar(x: number, y: number): void {
 	} else {
 		barScale(isIn);
 	}
+}
+
+/**
+ * 渲染x轴坐标值
+ */
+
+function renderLabel() {
+	const points = _obj.points;
+	const options = _obj.options;
+	const y = _obj.height;
+	const ctx = _obj.ctx;
+	ctx.font = '14px 楷体';
+	ctx.textAlign = 'center';
+	points.forEach((p, i) => {
+		ctx.fillText(options.x[i], p.x, y - 30); // 底部label
+		ctx.fillText(options.y[i], p.x, p.y - 10); // 顶部数值
+	});
+	console.log(options);
 }
