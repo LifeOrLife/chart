@@ -36,6 +36,7 @@ function startRenderBar(_ins: CreateChart): void {
 	});
 	ctx.restore();
 	renderLabel();
+	_ins.renderAxisLine();
 }
 
 function barScale(isIn: boolean, index?: number): void {

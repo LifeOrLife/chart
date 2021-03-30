@@ -97,6 +97,41 @@ export default class CreateChart {
 			this[prop] = _v;
 		});
 	}
+	// 绘制轴线
+	renderAxisLine(): void {
+		const { left, top, bottom, right, width, height, ctx } = this;
+		const poins = [];
+		// poins[0] = {
+		// 	x: left,
+		// 	y: top
+		// };
+		// poins[1] = {
+		// 	x: left,
+		// 	y: height - bottom
+		// };
+		// poins[2] = {
+		// 	x: width - right,
+		// 	y: height - bottom
+		// };
+		poins[0] = {
+			x: 0,
+			y: 0
+		};
+		poins[1] = {
+			x: 0,
+			y: height - bottom
+		};
+		poins[2] = {
+			x: width,
+			y: height - bottom
+		};
+		ctx.beginPath();
+		ctx.moveTo(poins[0].x, poins[0].y);
+		ctx.lineTo(poins[1].x, poins[1].y);
+		ctx.lineTo(poins[2].x, poins[2].y);
+		ctx.stroke();
+		ctx.closePath();
+	}
 	renderOptions(option: options): void {
 		this.lineWidth = option.lineWidth || 1;
 		this.calculatePoint(option);
