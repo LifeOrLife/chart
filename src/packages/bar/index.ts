@@ -86,5 +86,4 @@ function renderLabel() {
 		ctx.fillText(options.x[i], p.x, y - 30); // 底部label
 		ctx.fillText(options.y[i], p.x, p.y - 10); // 顶部数值
 	});
-	console.log(options);
 }

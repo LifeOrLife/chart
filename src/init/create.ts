@@ -26,7 +26,10 @@ export default class CreateChart {
 	container: HTMLElement;
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
-
+	left = 50;
+	top = 50;
+	right = 50;
+	bottom = 50;
 	width: number;
 	height: number;
 	ratio = 1;
@@ -69,12 +72,30 @@ export default class CreateChart {
 		this.width = width;
 		this.height = height;
 		this.ratio = ratio;
+		this.paddingAdd(options);
 		this.moveHandle = (e: Event) => {
 			const ev = e as WheelEvent;
 			const x = ev.offsetX;
 			const y = ev.offsetY;
 			this.startJudge(x, y);
 		};
+	}
+	paddingAdd(opt: params): void {
+		['left', 'top', 'right', 'bottom'].forEach((prop) => {
+			const v = this[prop];
+			let _v = Math.floor(Number(opt[prop]));
+			if (_v === _v) {
+				if (_v <= 30) {
+					_v = 30;
+				}
+				if (_v >= 60) {
+					_v = 60;
+				}
+			} else {
+				_v = v;
+			}
+			this[prop] = _v;
+		});
 	}
 	renderOptions(option: options): void {
 		this.lineWidth = option.lineWidth || 1;
@@ -112,16 +133,12 @@ export default class CreateChart {
 
 		this.addEvent();
 		if (option.type === 'line') {
-			// this.renderLine();
 			renderLine(this);
 		}
 		if (option.type === 'bar') {
 			renderBar(this);
-			// this.calculateBar();
-			// this.startRenderBar();
 		}
 		if (option.type === 'pie') {
-			// this.renderPie(option);
 			renderPie(this, option);
 		}
 	}
