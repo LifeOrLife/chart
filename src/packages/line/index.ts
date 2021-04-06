@@ -1,5 +1,8 @@
 import CreateChart from '../../init/create';
 import { isInLine } from '../../utils/contain/line';
+import { startAni, endAni } from '../../utils/ani';
+
+type points = Array<{ x: number; y: number }>;
 
 let _obj;
 export default function renderLine(render: CreateChart, w?: number): void {
@@ -7,10 +10,12 @@ export default function renderLine(render: CreateChart, w?: number): void {
 		w = 1;
 	}
 	_obj = render;
-	drawStraight(w);
+	drawStraight(_obj.points, w);
 	// 绘制贝塞尔曲线
-	bezierCurve(w);
+	bezierCurve(_obj.points, w);
 	drawCircle();
+
+	dynamicDraw();
 }
 
 export function judgeThePosLine(x: number, y: number): void {
@@ -93,8 +98,8 @@ function drawCircle(style = '#6cf'): void {
 }
 
 // 绘制普通直线折线
-function drawStraight(w: number, style = 'aqua'): void {
-	const { ctx, points } = _obj;
+function drawStraight(points: points, w = 1, style = 'aqua'): void {
+	const { ctx } = _obj;
 	ctx.save();
 	ctx.beginPath();
 	ctx.lineWidth = w;
@@ -112,8 +117,8 @@ function drawStraight(w: number, style = 'aqua'): void {
 }
 
 // 绘制贝塞尔曲线
-function bezierCurve(w: number): void {
-	const { points, ctx } = _obj;
+function bezierCurve(points: points, w = 1): void {
+	const { ctx } = _obj;
 	ctx.save();
 	ctx.lineWidth = w;
 	ctx.beginPath();
@@ -159,4 +164,24 @@ function bezierCurve(w: number): void {
 	});
 	ctx.stroke();
 	ctx.restore();
+}
+
+// 动态绘制曲线
+let a_id,
+	p_i = 0;
+function dynamicDraw(): void {
+	const { points, ctx } = _obj;
+	if (p_i >= points.length - 1 && a_id) {
+		endAni(a_id);
+		return;
+	}
+	const p: points = [];
+	let s_i = 0;
+	while (s_i++ <= p_i) {
+		p.push(points[s_i]);
+	}
+	_obj.clearRect();
+	drawStraight(p);
+	p_i++;
+	a_id = startAni(dynamicDraw);
 }
