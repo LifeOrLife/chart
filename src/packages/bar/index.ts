@@ -28,6 +28,7 @@ function calculateBar(_ins: CreateChart): void {
 function startRenderBar(_ins: CreateChart): void {
 	const point = _ins.points;
 	const ctx = _ins.ctx;
+	ctx.beginPath();
 	ctx.save();
 	ctx.fillStyle = 'aqua';
 	point.forEach((p) => {
@@ -37,6 +38,7 @@ function startRenderBar(_ins: CreateChart): void {
 	ctx.restore();
 	renderLabel();
 	_ins.renderAxisLine();
+	ctx.closePath();
 }
 
 function barScale(isIn: boolean, index?: number): void {
