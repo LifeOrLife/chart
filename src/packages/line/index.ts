@@ -7,31 +7,10 @@ export default function renderLine(render: CreateChart, w?: number): void {
 		w = 1;
 	}
 	_obj = render;
-	const ctx = render.ctx;
-	const point = render.points;
-	ctx.save();
-	ctx.beginPath();
-	ctx.lineWidth = w;
-	ctx.strokeStyle = '#6cf';
-	point.map((p, i) => {
-		if (i === 0) {
-			ctx.moveTo(p.x, p.y);
-		} else {
-			ctx.lineTo(p.x, p.y);
-		}
-	});
-	ctx.stroke();
-	ctx.restore();
-	ctx.closePath();
-
-	point.forEach((p) => {
-		ctx.save();
-		ctx.beginPath();
-		ctx.strokeStyle = 'aqua';
-		ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-		ctx.stroke();
-		ctx.restore();
-	});
+	drawStraight(w);
+	// 绘制贝塞尔曲线
+	bezierCurve(w);
+	drawCircle();
 }
 
 export function judgeThePosLine(x: number, y: number): void {
@@ -98,4 +77,86 @@ function isInTheLine(x: number, y: number, index: number): boolean {
 		return isInLine(pre, next, x, y, _obj.ctx.lineWidth);
 	}
 	return false;
+}
+
+// 绘制数据点圆形
+function drawCircle(style = '#6cf'): void {
+	const { ctx, points } = _obj;
+	points.forEach((p) => {
+		ctx.save();
+		ctx.beginPath();
+		ctx.strokeStyle = style;
+		ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+		ctx.stroke();
+		ctx.restore();
+	});
+}
+
+// 绘制普通直线折线
+function drawStraight(w: number, style = 'aqua'): void {
+	const { ctx, points } = _obj;
+	ctx.save();
+	ctx.beginPath();
+	ctx.lineWidth = w;
+	ctx.strokeStyle = style;
+	points.map((p, i) => {
+		if (i === 0) {
+			ctx.moveTo(p.x, p.y);
+		} else {
+			ctx.lineTo(p.x, p.y);
+		}
+	});
+	ctx.stroke();
+	ctx.restore();
+	ctx.closePath();
+}
+
+// 绘制贝塞尔曲线
+function bezierCurve(w: number): void {
+	const { points, ctx } = _obj;
+	ctx.save();
+	ctx.lineWidth = w;
+	ctx.beginPath();
+	ctx.strokeStyle = '#6cf';
+	points.forEach((item, index) => {
+		const scale = 0.1;
+		// 前一个点坐标
+		let nextX, nextY;
+		let cAx, cAy, cBx, cBy;
+		const nowX = item.x;
+		const nowY = item.y;
+		if (index === 0) {
+			ctx.moveTo(nowX, nowY);
+			return;
+		}
+		const last1X = points[index - 1].x;
+		const last1Y = points[index - 1].y;
+		if (index !== points.length - 1) {
+			nextX = points[index + 1].x;
+			nextY = points[index + 1].y;
+			cBx = nowX - (nextX - last1X) * scale;
+			cBy = nowY - (nextY - last1Y) * scale;
+		}
+		if (index === 1) {
+			cAx = last1X + nowX * scale;
+			if (last1Y > nowY) {
+				cAy = last1Y - nowY * scale;
+			} else {
+				cAy = last1Y + nowX * scale;
+			}
+			ctx.bezierCurveTo(cAx, cAy, cBx, cBy, nowX, nowY);
+			return;
+		}
+		const last2X = points[index - 2].x;
+		const last2Y = points[index - 2].y;
+		cAx = last1X + (nowX - last2X) * scale;
+		cAy = last1Y + (nowY - last2Y) * scale;
+		if (index === points.length - 1) {
+			cBx = nowX - (nowX - last1X) * scale;
+			cBy = nowY - (nowY - last1Y) * scale;
+		}
+		ctx.bezierCurveTo(cAx, cAy, cBx, cBy, nowX, nowY);
+	});
+	ctx.stroke();
+	ctx.restore();
 }
