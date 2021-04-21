@@ -1,4 +1,4 @@
-**_人生不满百，何有千岁忧_**
+**[canvas 文档](https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Basic_animations)**
 
 [git 已提交记录用户信息修改](https://www.cnblogs.com/zh7791/p/12986083.html)
 
