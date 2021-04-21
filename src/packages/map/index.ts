@@ -5,7 +5,7 @@
 import types from '../../utils/types';
 import { getStyle } from '../../utils/getStyle';
 
-interface opt {
+export interface opt {
 	el: string | Element;
 	padding?: number;
 }
