@@ -4,32 +4,12 @@
  */
 import types from '../../utils/types';
 import { getStyle } from '../../utils/getStyle';
+import { point, datasource } from '../../utils/type';
 
 export interface opt {
 	el: string | Element;
 	padding?: number;
 }
-type point = {
-	points: Array<Array<number>>;
-	name: string;
-	center: Array<number>;
-};
-
-type features = {
-	type: string;
-	properties: {
-		[key: string]: number | string | Array<number>;
-	};
-	geometry: {
-		type: string;
-		coordinates: Array<Array<Array<Array<number>>>>;
-	};
-};
-
-type datasource = {
-	type: string;
-	features: Array<features>;
-};
 
 const params: {
 	[key: string]:
