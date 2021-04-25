@@ -20,7 +20,7 @@ const params: {
 		| Element
 		| CanvasRenderingContext2D;
 } = {};
-export function renderWind(options: opt) {
+export function renderWind(options: opt): void {
 	let el = options.el;
 	if (types.isString(el)) {
 		el = document.querySelector(el as string);
@@ -64,7 +64,7 @@ type points = Array<{
 	width: number;
 	height: number;
 }>;
-export function startDrawWind(points: points) {
+export function startDrawWind(points: points): void {
 	const ctx = (params.ctx as unknown) as CanvasRenderingContext2D;
 	const width = params.width as number;
 	const height = params.height as number;
