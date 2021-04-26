@@ -6,14 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>draw-text</title>
+    <style>
+        .box {
+            border: 2px solid #6cf;
+        }
+    </style>
 </head>
 
 <body>
     <canvas width="600" height="400" class="box"></canvas>
     <script>
         class startDraw {
-            constructor(el, config) {
+            constructor(el, config = {}) {
                 this.el = el;
+                const _conf = {
+                    lineWidth: 6,
+                    color: '#black'
+                }
+                this.config = Object.assign(_conf, config);
                 this.stacks = []; // 用来存储操作步骤
             }
             init() {
@@ -37,8 +47,8 @@
                     canvas.width = width;
                     canvas.height = height;
                 }
-                context.lineWidth = 6;
-                context.strokeStyle = 'black';
+                context.lineWidth = this.config.lineWidth;
+                context.strokeStyle = this.config.color;
                 context.lineCap = 'round';
                 context.lineJoin = 'round';
                 this.bindEvent();
@@ -54,7 +64,7 @@
                     ctx.beginPath();
                     ctx.moveTo(this.x, this.y);
                 })
-                el.addEventListener('mousemove', e => {
+                document.addEventListener('mousemove', e => {
                     if (this.canDraw) {
                         this.x = e.layerX;
                         this.y = e.layerY;
@@ -62,7 +72,7 @@
                         ctx.stroke();
                     }
                 })
-                el.addEventListener('mouseup', e => {
+                document.addEventListener('mouseup', e => {
                     this.canDraw = false;
                 })
             }
@@ -78,11 +88,36 @@
                 const ctx = this.context
                 ctx.clearRect(0, 0, this.width, this.height);
             }
+            getPNGImage() {
+                const canvas = this.el;
+                return canvas.toDataURL('image/png');
+            }
+            downloadPNGImage(image) {
+                const blob = this.dataURLtoBlob(this.getPNGImage(this.el));
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.download = 'test.png';
+                a.href = url;
+                a.click();
+            }
+            dataURLtoBlob(dataURL) {
+                const arr = dataURL.split(',');
+                const mime = arr[0].match(/:(.*?);/)[1];
+                const bStr = atob(arr[1]);
+                let n = bStr.length;
+                const u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bStr.charCodeAt(n);
+                }
+                return new Blob([u8arr], { type: mime });
+            }
         }
         let el = document.getElementsByClassName('box')[0];
-        let pen = new startDraw(el);
+        let pen = new startDraw(el, {
+            lineWidth: 4,
+            color: 'aqua'
+        });
         pen.init();
-        console.log(pen);
     </script>
 </body>
 
