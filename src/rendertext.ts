@@ -1,4 +1,10 @@
 import { drawText } from './packages/text';
 
 const el = document.getElementById('text') as HTMLCanvasElement;
-drawText(el, `一段文字，又是一段文字，还是一段文字，再来一段文字`);
+drawText(
+	el,
+	`
+		一段文字,另一段文字，又一段文字，还有一段文字
+		这是第二段文字
+		再来一段文字，测试文字，测试文字二号`
+);

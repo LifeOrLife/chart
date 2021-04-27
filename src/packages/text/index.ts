@@ -1,6 +1,7 @@
 /**
  * canvas绘制文字，自动换行
  * 可设置文字的大小，颜色，字体等
+ * todo: 主动换行分段
  */
 
 interface textObj {
@@ -8,13 +9,15 @@ interface textObj {
 	ctx: CanvasRenderingContext2D;
 	width: number;
 	height: number;
+	line: number;
 }
 
 const obj: textObj = {
 	el: null,
 	ctx: null,
 	width: 0,
-	height: 0
+	height: 0,
+	line: 0
 };
 
 const config: {
@@ -26,7 +29,8 @@ export function drawText(canvas: HTMLCanvasElement, text: string): void {
 	config.size = 13;
 	config.h = 20;
 	config.line = 1;
-	calaText(text);
+	// calaText(text);
+	splitParagraph(text);
 }
 
 function initCanvas(canvas: HTMLCanvasElement) {
@@ -52,21 +56,49 @@ function initCanvas(canvas: HTMLCanvasElement) {
 }
 
 /**
+ * 根据换行符对文字进行切割，
+ * 然后做分段处理
+ */
+function splitParagraph(text: string) {
+	let paragraphs = text.split(/\n/g);
+	paragraphs = paragraphs.filter((p) => !!p);
+	paragraphs.forEach((pa, i) => {
+		const line = calculateLine(paragraphs, i);
+		calaText(line, pa);
+	});
+}
+/**
+ * 计算行数
+ */
+function calculateLine(paragraphs: string[], index: number): number {
+	if (index === 0) {
+		return 1;
+	}
+	const num = getCharacterNumber();
+	let _line = 1;
+	for (let i = 0; i < index; i++) {
+		const pa = paragraphs[i];
+		const line = Math.ceil(pa.length / num);
+		_line += line;
+	}
+	return _line;
+}
+
+/**
  * 计算
  */
-function calaText(text: string) {
+function calaText(line: number, text: string) {
 	const words = text.split('');
+	const num = getCharacterNumber();
 	const w_w = config.size as number;
-	// 一行可以放置的文字
-	const num = Math.floor(obj.width / w_w);
 	for (let i = 0; i < words.length; i++) {
 		const w = words[i];
-		let line = 1;
+		let _line = line;
 		if (i >= num) {
-			line = Math.floor(i / num) + 1;
+			_line += Math.floor(i / num);
 		}
 		const x = (i % num) * w_w;
-		const y = line * (w_w + 10);
+		const y = _line * (w_w + 10);
 		drawWord(w, x, y);
 	}
 }
@@ -81,4 +113,14 @@ function drawWord(text: string, x: number, y: number) {
 	const ctx = obj.ctx;
 	ctx.font = `${config.size}px 微软雅黑`;
 	ctx.fillText(text, x, y);
+}
+
+/**
+ * 计算canvas每一行能够渲染的字符数量
+ */
+function getCharacterNumber(): number {
+	const w_w = config.size as number;
+	// 一行可以放置的文字
+	const num = Math.floor(obj.width / w_w);
+	return num;
 }
