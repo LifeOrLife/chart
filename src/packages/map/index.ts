@@ -133,7 +133,7 @@ function drawText(area: point) {
 	const x = (area.center[0] - minLog) * scale;
 	const y = (maxLat - area.center[1]) * scale + padding;
 	ctx.fillStyle = 'aqua';
-	ctx.font = '16px 微软雅黑';
+	ctx.font = '13px 微软雅黑';
 	ctx.fillText(area.name, x, y);
 	ctx.restore();
 }
@@ -182,25 +182,64 @@ function bindEvent() {
 		throttle((e) => {
 			const x = e.layerX;
 			const y = e.layerY;
-			clearCanvas();
-			let isIn = false;
 			const areas = params.areas as Array<point>;
-			const ratio = params.ratio as number;
+			const num = judgePointArea(x, y);
+			let cursor = 'default';
 			const ctx = (params.ctx as unknown) as CanvasRenderingContext2D;
-			for (let i = 0; i < areas.length; i++) {
-				drawLine(areas[i].points);
-				drawText(areas[i]);
-				if (ctx.isPointInPath(x * ratio, y * ratio)) {
-					isIn = true;
-					ctx.save();
-					ctx.lineWidth = 2;
+			if (num !== -1) {
+				cursor = 'pointer';
+				ctx.save();
+				ctx.lineWidth = 2;
+				drawLine(areas[num].points);
+				ctx.restore();
+				for (let i = num; i < areas.length; i++) {
 					drawLine(areas[i].points);
-					ctx.restore();
+					drawText(areas[i]);
 				}
 			}
-			canvas.style.cursor = isIn ? 'pointer' : 'default';
+			canvas.style.cursor = cursor;
 		}, 50)
 	);
+
+	canvas.addEventListener(
+		'click',
+		throttle((e) => {
+			const x = e.layerX;
+			const y = e.layerY;
+			const num = judgePointArea(x, y);
+			const areas = params.areas as Array<point>;
+			if (num === -1) {
+				console.log('地图区域外部');
+				return;
+			}
+			for (let i = num; i < areas.length; i++) {
+				drawLine(areas[i].points);
+				drawText(areas[i]);
+			}
+			console.log(areas[num]);
+		}, 50)
+	);
+}
+
+/**
+ * 对点和区域的判断
+ * @param x {number}
+ * @param y {number}
+ * @return {number} 返回-1表示没有在地图的任何区域
+ */
+function judgePointArea(x: number, y: number): number {
+	clearCanvas();
+	const areas = params.areas as Array<point>;
+	const ratio = params.ratio as number;
+	const ctx = (params.ctx as unknown) as CanvasRenderingContext2D;
+	for (let i = 0; i < areas.length; i++) {
+		drawLine(areas[i].points);
+		drawText(areas[i]);
+		if (ctx.isPointInPath(x * ratio, y * ratio)) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 function throttle(fn, time) {
