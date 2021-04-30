@@ -55,6 +55,14 @@ function initCanvas(canvas: HTMLCanvasElement) {
 	}
 }
 
+/***
+ * 文字按照默认浏览器渲染规则大小来渲染
+ */
+function defaultRender(text: string) {
+	// 1、从1个字符开始，逐个字符叠加渲染，每次渲染之后获取渲染文字的宽度
+	// 2、若获取的文字宽度，超过容器的宽度，则换下一行渲染
+}
+
 /**
  * 根据换行符对文字进行切割，
  * 然后做分段处理
@@ -63,6 +71,7 @@ function splitParagraph(text: string) {
 	let paragraphs = text.split(/\n/g);
 	paragraphs = paragraphs.filter((p) => !!p);
 	paragraphs.forEach((pa, i) => {
+		// 计算每一段文字会占据的行数
 		const line = calculateLine(paragraphs, i);
 		calaText(line, pa);
 	});
@@ -86,6 +95,7 @@ function calculateLine(paragraphs: string[], index: number): number {
 
 /**
  * 计算
+ * 每个字符按指定的大小尺寸进行渲染，页面不会混乱
  */
 function calaText(line: number, text: string) {
 	const words = text.split('');
