@@ -50,7 +50,7 @@ export class oneMinutes {
 		this.el = el;
 		this.init();
 	}
-	init() {
+	init(): void {
 		let _can;
 		const el = this.el;
 		if (el instanceof HTMLCanvasElement) {
@@ -67,17 +67,17 @@ export class oneMinutes {
 		this.width = info.width as number;
 		this.height = info.height as number;
 	}
-	generatePointer() {
+	generatePointer(): void {
 		const pointers: number[] = Array.from(' '.repeat(60), (item, index) => {
 			return (index * 6 * Math.PI * 2) / 360;
 		});
 		this.pointers = pointers;
 	}
-	drawLine() {
+	drawLine(): void {
 		const pointers = this.pointers;
 		this.renderLine(pointers);
 	}
-	renderLine(pointers: number[], color = '#000') {
+	renderLine(pointers: number[], color = '#000'): void {
 		const ctx = this.ctx;
 		const x = this.width / 2;
 		const y = this.height / 2;
@@ -96,7 +96,39 @@ export class oneMinutes {
 			ctx.restore();
 		});
 	}
-	startPlay() {
+	drawCircle(): void {
+		const radius = [50, 90, 130, 170];
+		const ctx = this.ctx;
+		const x = this.width / 2;
+		const y = this.height / 2;
+		radius.forEach((r) => {
+			ctx.save();
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			ctx.strokeStyle = this.getColor();
+			ctx.arc(x, y, r, 0, Math.PI * 2);
+			ctx.stroke();
+			ctx.restore();
+		});
+	}
+	drawWindmill(): void {
+		const ctx = this.ctx;
+		const x = this.width / 2;
+		const y = this.height / 2;
+		const r = 100;
+		const points = [
+			{ x, y: y - r },
+			{ x, y },
+			{ x: x + r / 2, y: y - Math.sqrt((1 / 2) * r * r) }
+		];
+		ctx.beginPath();
+		ctx.moveTo(points[0].x, points[0].y);
+		points.slice(1).forEach((p) => {
+			ctx.lineTo(p.x, p.y);
+		});
+		ctx.stroke();
+	}
+	startPlay(): void {
 		this.timer = setInterval(() => {
 			this.index++;
 			const pointers = this.pointers.slice(this.index);
@@ -110,7 +142,7 @@ export class oneMinutes {
 	getColor(): string {
 		return '#' + Math.random().toString(16).slice(2, 8);
 	}
-	clear() {
+	clear(): void {
 		const ctx = this.ctx;
 		const w = this.width;
 		const h = this.height;
