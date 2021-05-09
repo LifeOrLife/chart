@@ -119,14 +119,21 @@ export class oneMinutes {
 		const points = [
 			{ x, y: y - r },
 			{ x, y },
-			{ x: x + r / 2, y: y - Math.sqrt((1 / 2) * r * r) }
+			{ x: x + r / 2, y: y - Math.sqrt((3 / 4) * r * r) }
 		];
+		// ctx.save();
+		// ctx.translate(x, y);
+		// ctx.rotate((-Math.PI / 180) * 15);
 		ctx.beginPath();
-		ctx.moveTo(points[0].x, points[0].y);
-		points.slice(1).forEach((p) => {
-			ctx.lineTo(p.x, p.y);
+		points.forEach((p, i) => {
+			if (i === 0) {
+				ctx.moveTo(p.x, p.y);
+			} else {
+				ctx.lineTo(p.x, p.y);
+			}
 		});
 		ctx.stroke();
+		// ctx.restore();
 	}
 	startPlay(): void {
 		this.timer = setInterval(() => {
