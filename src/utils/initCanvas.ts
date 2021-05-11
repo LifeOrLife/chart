@@ -1,10 +1,10 @@
-interface canvasInfo {
+export interface canvasInfo {
 	ctx?: CanvasRenderingContext2D;
 	width?: number;
 	height?: number;
 	ratio?: number;
 }
-type obj = canvasInfo
+type obj = canvasInfo;
 
 export function initCanvas(
 	canvas: HTMLCanvasElement,
@@ -31,4 +31,18 @@ export function initCanvas(
 	});
 	context.scale(devicePixelRatio, devicePixelRatio);
 	return obj;
+}
+
+/**
+ * 清空canvas
+ * @param ctx {CanvasRenderingContext2D}
+ * @param width {number}
+ * @param height {number}
+ */
+export function clearCanvas(
+	ctx: CanvasRenderingContext2D,
+	width: number,
+	height: number
+) {
+	ctx.clearRect(0, 0, width, height);
 }
