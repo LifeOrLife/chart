@@ -37,10 +37,15 @@ function startPlay() {
 	const { ctx, width, height } = obj;
 	clearCanvas(ctx, width, height);
 	// generateLeaf(ONE_ROUND / 12);
+	const h1 = Math.random() > 0.5 ? 100 : 200; // 扇叶主茎长度
 	for (let i = 0; i < 6; i++) {
 		const _angel = obj.angel as number;
 		const angel = i * 60 + _angel;
-		generateLeaf((ONE_ROUND / 360) * angel, color());
+		// 生成相近的颜色
+		const c = `rgb(0, ${Math.floor(255 - 42.5 * i)}, ${Math.floor(
+			255 - 42.5 * (i + 1)
+		)})`;
+		generateLeaf((ONE_ROUND / 360) * angel, h1, c);
 	}
 	const add = obj.add as number;
 	const angel = obj.angel as number;
@@ -57,12 +62,12 @@ function startPlay() {
 /**
  * 生成扇叶
  */
-function generateLeaf(angel: number, color = '#000') {
+function generateLeaf(angel: number, h1: number, color = '#000') {
 	const { ctx, width, height } = obj;
 	const x = width / 2;
 	const y = height / 2;
 	const h = 150;
-	const h1 = Math.random() > 0.5 ? 100 : 200;
+	// const h1 = Math.random() > 0.5 ? 100 : 200; // 扇叶主茎长度
 	// const h1 = 100; // 设为200时，每个扇叶为向外突出的形状，100时，为向内凹陷的形状
 	ctx.save();
 	ctx.beginPath();
@@ -72,7 +77,7 @@ function generateLeaf(angel: number, color = '#000') {
 	const points = [
 		{ x, y: y - h },
 		{ x, y },
-		{ x: x + h / 2, y: y - Math.sqrt((3 / 4) * h * h) },
+		{ x: x + h / 2, y: y - h * Math.cos(ONE_ROUND / 12) },
 		{
 			x: x + h1 * Math.sin(ONE_ROUND / 24),
 			y: y - h1 * Math.cos(ONE_ROUND / 24)
@@ -93,13 +98,7 @@ function generateLeaf(angel: number, color = '#000') {
 /**
  * 生成圆形
  */
-function drawCircle(
-	x: number,
-	y: number,
-	r: number,
-	w = 1,
-	color = '#000'
-) {
+function drawCircle(x: number, y: number, r: number, w = 1, color = '#000') {
 	const { ctx } = obj;
 	if (!ctx) {
 		return;
