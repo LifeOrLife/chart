@@ -111,29 +111,36 @@ export class oneMinutes {
 			ctx.restore();
 		});
 	}
-	drawWindmill(): void {
+	drawWindmill(rotete = 0): void {
 		const ctx = this.ctx;
 		const x = this.width / 2;
 		const y = this.height / 2;
 		const r = 100;
 		const points = [
 			{ x, y: y - r },
-			{ x, y },
+			{ x, y: y - 20 },
 			{ x: x + r / 2, y: y - Math.sqrt((3 / 4) * r * r) }
 		];
-		// ctx.save();
-		// ctx.translate(x, y);
-		// ctx.rotate((-Math.PI / 180) * 15);
+		ctx.save();
+		ctx.translate(x, y);
+		ctx.rotate(rotete);
 		ctx.beginPath();
 		points.forEach((p, i) => {
 			if (i === 0) {
-				ctx.moveTo(p.x, p.y);
+				ctx.moveTo(p.x - x, p.y - y);
 			} else {
-				ctx.lineTo(p.x, p.y);
+				ctx.lineTo(p.x - x, p.y - y);
 			}
 		});
 		ctx.stroke();
-		// ctx.restore();
+		ctx.restore();
+	}
+	repeatWindmill(): void {
+		let num = 6;
+		while (num--) {
+			const rotate = (Math.PI / 180) * num * 60;
+			this.drawWindmill(rotate);
+		}
 	}
 	startPlay(): void {
 		this.timer = setInterval(() => {
