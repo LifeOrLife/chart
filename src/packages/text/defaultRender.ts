@@ -52,7 +52,20 @@ function drawDefaultLine(text: string, start: number, line: number) {
 	const h = Number(size);
 	const y = Number(size) * (line + 1);
 	for (let i = start; i < len; i++) {
+		const v = text[i];
 		let word = text.slice(start, i);
+		if (v === '\n') {
+			word = text.slice(start, i + 1);
+			if (!word) {
+				word = '';
+			}
+			defaultLines.push({
+				line,
+				word
+			});
+			drawDefaultLine(text.slice(i + 1), 0, line + 1);
+			break;
+		}
 		renderWord(ctx, h, word, y, width, height);
 		const info = ctx.measureText(word);
 		if (info.width > width) {
