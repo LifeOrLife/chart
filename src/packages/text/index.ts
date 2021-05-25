@@ -4,7 +4,7 @@
  * todo: 主动换行分段
  */
 
-interface textObj {
+export interface textObj {
 	el: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
 	width: number;
@@ -24,18 +24,6 @@ const config: {
 	[key: string]: string | number;
 } = {};
 
-const config_oth: {
-	[key: string]: string | number;
-} = {};
-
-const obj_oth: textObj = {
-	el: null,
-	ctx: null,
-	width: 0,
-	height: 0,
-	line: 0
-};
-
 export function drawText(canvas: HTMLCanvasElement, text: string): void {
 	initCanvas(canvas, obj);
 	config.size = 13;
@@ -45,18 +33,7 @@ export function drawText(canvas: HTMLCanvasElement, text: string): void {
 	splitParagraph(text);
 }
 
-/**
- * 默认渲染方式
- */
-export function defaultDrawText(canvas: HTMLCanvasElement, text: string): void {
-	initCanvas(canvas, obj_oth);
-	config_oth.size = 13;
-	config_oth.h = 20;
-	config_oth.line = 1;
-	defaultRender(text);
-}
-
-function initCanvas(canvas: HTMLCanvasElement, obj: textObj) {
+export function initCanvas(canvas: HTMLCanvasElement, obj: textObj) {
 	const { width, height } = window.getComputedStyle(canvas, null);
 	const w = parseInt(width);
 	const h = parseInt(height);
@@ -76,62 +53,6 @@ function initCanvas(canvas: HTMLCanvasElement, obj: textObj) {
 		canvas.width = w;
 		canvas.height = h;
 	}
-}
-
-/***
- * 文字按照默认浏览器渲染规则大小来渲染
- */
-function defaultRender(text: string) {
-	// 1、从1个字符开始，逐个字符叠加渲染，每次渲染之后获取渲染文字的宽度
-	// 2、若获取的文字宽度，超过容器的宽度，则换下一行渲染
-	const start = 0;
-	const line = 1;
-	drawDefaultLine(text, start, line);
-}
-
-/**
- * 绘制每一行文本
- * @param text {string} 要绘制的文本内容
- * @param start {number} 当前一行开头的第一个文字对应的默认文本的下标
- * @param line {number} 当前行数
- */
-function drawDefaultLine(text: string, start: number, line: number) {
-	const len = text.length;
-	const { ctx, width, height } = obj_oth;
-	const { size } = config_oth;
-	const h = Number(size);
-	const y = Number(size) * (line + 1);
-	for (let i = start; i < len; i++) {
-		const one = text[i];
-		let word = text.slice(start, i);
-		renderWord(ctx, h, word, y, width, h);
-		const info = ctx.measureText(word);
-		if (info.width >= width) {
-			word = text.slice(start, i - 1);
-			renderWord(ctx, h, word, y, width, h);
-			start = i--;
-			line++;
-			drawDefaultLine(text, start, line);
-			break;
-		}
-		if (one === '\n') {
-			// 换行处理  todo
-			break;
-		}
-	}
-}
-
-function renderWord(
-	ctx: CanvasRenderingContext2D,
-	size: number,
-	word: string,
-	y: number,
-	width: number,
-	h: number
-) {
-	ctx.clearRect(0, y, width, h);
-	ctx.font = `${size}px 微软雅黑`;
-	ctx.fillText(word, 0, y);
 }
 
 /**

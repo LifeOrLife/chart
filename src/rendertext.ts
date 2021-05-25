@@ -1,4 +1,5 @@
-import { drawText, defaultDrawText } from './packages/text';
+import { drawText } from './packages/text';
+import { defaultDrawText } from './packages/text/defaultRender';
 
 const el = document.getElementById('text') as HTMLCanvasElement;
 const el_oth = document.getElementById('text_oth') as HTMLCanvasElement;
