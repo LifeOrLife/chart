@@ -5,4 +5,4 @@ _obj.generatePointer();
 // _obj.drawLine();
 // _obj.startPlay();
 // _obj.drawCircle();
-_obj.repeatWindmill();
+// _obj.repeatWindmill();
