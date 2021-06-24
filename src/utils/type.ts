@@ -24,3 +24,16 @@ export type point = {
 	name: string;
 	center: number[];
 };
+
+/**
+ * 函数类型
+ */
+export type fn = (ev: MouseEvent) => any;
+
+/**
+ * event 类型
+ */
+export interface wheel extends WheelEvent {
+	layerX: number;
+	layerY: number;
+}
