@@ -69,8 +69,8 @@ export function startDrawWind(points: points): void {
 	const width = params.width as number;
 	const height = params.height as number;
 	ctx.beginPath();
+	ctx.fillStyle = 'rgba(0, 0, 0, .1)';
 	ctx.fillRect(0, 0, width, height);
-	ctx.fillStyle = 'rgba(0, 0, 0, .3)';
 	points.forEach((p) => {
 		ctx.save();
 		ctx.lineWidth = p.width || 2;
