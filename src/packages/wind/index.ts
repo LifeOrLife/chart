@@ -75,13 +75,28 @@ export function startDrawWind(points: points): void {
 		ctx.save();
 		ctx.lineWidth = p.width || 2;
 		ctx.moveTo(p.x, p.y);
-		ctx.lineTo(p.x + 10, p.y);
+		const x = p.x + p.vx;
+		const y = p.y + p.vy;
+		ctx.lineTo(x + p.height, y);
+		p.x = x;
+		// p.y = y;
 		ctx.strokeStyle = p.color;
 		ctx.stroke();
 		ctx.restore();
-		p.x += p.vx;
+		if (p.x >= width) {
+			p.x = randomVal(100, 0, true);
+			p.y = randomVal(400, 0, true);
+		}
 	});
 	requestAnimationFrame(() => {
 		startDrawWind(points);
 	});
+}
+
+function randomVal(max: number, min: number, isInteger?: boolean): number {
+	const v = Math.random() * (max - min) + min;
+	if (isInteger) {
+		return Math.floor(v);
+	}
+	return v;
 }
