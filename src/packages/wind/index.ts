@@ -61,31 +61,33 @@ type points = Array<{
 	vx: number; // x方向移动的速度
 	vy: number; // y方向移动的速度
 	color: string;
-	width: number;
-	height: number;
 }>;
 export function startDrawWind(points: points): void {
-	const ctx = (params.ctx as unknown) as CanvasRenderingContext2D;
+	const ctx = params.ctx as unknown as CanvasRenderingContext2D;
 	const width = params.width as number;
 	const height = params.height as number;
 	ctx.beginPath();
-	ctx.fillStyle = 'rgba(0, 0, 0, .1)';
+	ctx.fillStyle = 'rgba(0, 0, 0, .1)'; // rgba a 控制流线拖曳长度
 	ctx.fillRect(0, 0, width, height);
 	points.forEach((p) => {
 		ctx.save();
-		ctx.lineWidth = p.width || 2;
+		ctx.lineWidth = 2; // 线的宽度
+		const h = 1;
+		ctx.lineCap = 'round';
 		ctx.moveTo(p.x, p.y);
 		const x = p.x + p.vx;
 		const y = p.y + p.vy;
-		ctx.lineTo(x + p.height, y);
+		ctx.lineTo(x + h, y);
 		p.x = x;
-		// p.y = y;
+		p.y = y;
 		ctx.strokeStyle = p.color;
 		ctx.stroke();
 		ctx.restore();
-		if (p.x >= width) {
+		if (p.x >= width || p.y >= height) {
 			p.x = randomVal(100, 0, true);
 			p.y = randomVal(400, 0, true);
+			(p.vx = randomVal(1, 0.5)),
+				(p.vy = Math.random() * (Math.random() > 0.5 ? 1 : -1));
 		}
 	});
 	requestAnimationFrame(() => {

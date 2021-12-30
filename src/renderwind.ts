@@ -8,10 +8,8 @@ const winds = Array.from('0'.repeat(100), (v) => {
 		x: randomVal(100, 0, true),
 		y: randomVal(400, 0, true),
 		vx: randomVal(1, 0.5),
-		vy: Math.random(),
-		color: '#6cf',
-		width: 2,
-		height: randomVal(15, 5, true)
+		vy: Math.random() * (Math.random() > 0.5 ? 1 : -1),
+		color: '#6cf'
 	};
 	return obj;
 });
