@@ -17,7 +17,6 @@ export function initCanvas(
 	obj.ctx = canvas.getContext('2d');
 	obj.width = w;
 	obj.height = h;
-	const context = obj.ctx as CanvasRenderingContext2D;
 	// 根据设备像素比优化canvas绘图
 	const devicePixelRatio = window.devicePixelRatio || 1;
 	obj.ratio = devicePixelRatio;
@@ -29,7 +28,6 @@ export function initCanvas(
 		width: w * devicePixelRatio,
 		height: h * devicePixelRatio
 	});
-	context.scale(devicePixelRatio, devicePixelRatio);
 	return obj;
 }
 
