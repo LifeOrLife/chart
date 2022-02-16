@@ -86,8 +86,8 @@ export function startDrawWind(points: points): void {
 		if (p.x >= width || p.y >= height) {
 			p.x = randomVal(100, 0, true);
 			p.y = randomVal(400, 0, true);
-			(p.vx = randomVal(1, 0.5)),
-				(p.vy = Math.random() * (Math.random() > 0.5 ? 1 : -1));
+			p.vx = randomVal(1, 0.5);
+			p.vy = Math.random() * (Math.random() > 0.5 ? 1 : -1);
 		}
 	});
 	requestAnimationFrame(() => {
