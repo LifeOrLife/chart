@@ -1,4 +1,4 @@
-[在线查看代码结构](https://github1s.com/LifeOrLife/chart)  
+[在线查看代码结构](https://vscode.dev/github/LifeOrLife/chart)  
 
 **[canvas 文档](https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Basic_animations)**
 
