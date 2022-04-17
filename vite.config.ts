@@ -1,3 +1,14 @@
-import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'url'
+import { defineConfig } from 'vite'
 
-export default defineConfig({});
+// https://vitejs.dev/config/
+export default defineConfig({
+  server: {
+    host: true
+  },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  }
+})
