@@ -1,7 +1,8 @@
-import mapdata from './packages/map/hubei.json';
-import renderMap, { setOptions } from './packages/map/index';
+import mapdata from './packages/map/hubei.json'
+import renderMap, { setOptions } from './packages/map'
 
 renderMap({
-	el: '#map'
-});
-setOptions(mapdata);
+  el: '#map'
+})
+// @ts-ignore
+setOptions(mapdata)
