@@ -34,6 +34,9 @@ export function drawText(canvas: HTMLCanvasElement, text: string): void {
 }
 
 export function initCanvas(canvas: HTMLCanvasElement, obj: textObj) {
+	if (!canvas) {
+		return;
+	}
 	const { width, height } = window.getComputedStyle(canvas, null);
 	const w = parseInt(width);
 	const h = parseInt(height);

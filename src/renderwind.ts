@@ -15,3 +15,4 @@ const winds = [
   }
 ]
 startDrawWind(winds)
+
