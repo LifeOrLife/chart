@@ -189,13 +189,12 @@ function bindEvent() {
   canvas.addEventListener(
     'mousemove',
     throttle((e: MouseEvent) => {
-      const x = e.clientX
-      const y = e.clientY
+      const x = e.offsetX
+      const y = e.offsetY
       const areas = params.areas as Array<point>
       const num = judgePointArea(x, y)
       let cursor = 'default'
       const ctx = params.ctx as unknown as CanvasRenderingContext2D
-      console.log(num)
       if (num !== -1) {
         cursor = 'pointer'
         ctx.save()
@@ -226,7 +225,6 @@ function bindEvent() {
         drawLine(areas[i].points)
         drawText(areas[i])
       }
-      console.log(areas[num])
     }, 50)
   )
 }
