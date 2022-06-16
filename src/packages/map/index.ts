@@ -251,13 +251,13 @@ function judgePointArea(x: number, y: number): number {
 }
 
 function throttle(fn: (e: MouseEvent) => void, time: number) {
-  let timer: number
+  let timer: ReturnType<typeof setTimeout>
   return (e: MouseEvent) => {
     if (!timer) {
       timer = setTimeout(() => {
-        timer = 0
+        timer = null
         fn(e)
-      }, time) as unknown as number
+      }, time)
     }
   }
 }

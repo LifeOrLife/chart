@@ -34,7 +34,7 @@ export function start(el: HTMLCanvasElement): void {
   Object.assign(obj, initCanvas(el, parseInt(style.width), parseInt(style.height)))
   obj.el = el
   oneMinutesPlay()
-  window.setInterval(() => {
+  setInterval(() => {
     startPlay()
   }, 1000)
 }
