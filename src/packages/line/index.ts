@@ -1,11 +1,12 @@
 import CreateChart from '../../init/create'
 import { isInLine } from '../../utils/contain/line'
 import { startAni, endAni } from '../../utils/ani'
+import type { Timer } from '../../utils/ani'
 
 type points = Array<{ x: number; y: number }>
 
-let _obj
-export default function renderLine(render: CreateChart, w?: number): void {
+let _obj: CreateChart
+export default function renderLine(render: CreateChart, w?: number) {
   if (!w) {
     w = 1
   }
@@ -18,8 +19,8 @@ export default function renderLine(render: CreateChart, w?: number): void {
   dynamicDraw()
 }
 
-export function judgeThePosLine(x: number, y: number): void {
-  let _x, _y, dis, index
+export function judgeThePosLine(x: number, y: number) {
+  let _x: number, _y: number, dis: number, index: number
   const len = _obj.points.length
   let isIn = false
   for (let i = 0; i < len; i++) {
@@ -41,7 +42,7 @@ export function judgeThePosLine(x: number, y: number): void {
   }
 }
 // 数据点放大/还原
-function pointScale(isIn: boolean, index?: number): void {
+function pointScale(isIn: boolean, index?: number) {
   _obj.canvas.style.cursor = isIn ? 'pointer' : 'default'
   _obj.points.forEach((p, i) => {
     p.r = 4
@@ -54,7 +55,7 @@ function pointScale(isIn: boolean, index?: number): void {
 }
 // 判断鼠标是否移动到了线上
 
-function judgeTheLine(x: number, y: number): void {
+function judgeTheLine(x: number, y: number) {
   const point = _obj.points
   let inLine = false
   for (let i = 0; i < point.length - 1; i++) {
@@ -71,7 +72,7 @@ function judgeTheLine(x: number, y: number): void {
   _obj.canvas.style.cursor = inLine ? 'pointer' : 'default'
 }
 
-function isInTheLine(x: number, y: number, index: number): boolean {
+function isInTheLine(x: number, y: number, index: number) {
   const pre = _obj.points[index]
   const next = _obj.points[index + 1]
   /**
@@ -85,7 +86,7 @@ function isInTheLine(x: number, y: number, index: number): boolean {
 }
 
 // 绘制数据点圆形
-function drawCircle(style = '#6cf'): void {
+function drawCircle(style = '#6cf') {
   const { ctx, points } = _obj
   points.forEach(p => {
     ctx.save()
@@ -98,7 +99,7 @@ function drawCircle(style = '#6cf'): void {
 }
 
 // 绘制普通直线折线
-function drawStraight(points: points, w = 1, style = 'aqua'): void {
+function drawStraight(points: points, w = 1, style = 'aqua') {
   const { ctx } = _obj
   ctx.save()
   ctx.beginPath()
@@ -117,7 +118,7 @@ function drawStraight(points: points, w = 1, style = 'aqua'): void {
 }
 
 // 绘制贝塞尔曲线
-function bezierCurve(points: points, w = 1): void {
+function bezierCurve(points: points, w = 1) {
   const { ctx } = _obj
   ctx.save()
   ctx.lineWidth = w
@@ -126,8 +127,8 @@ function bezierCurve(points: points, w = 1): void {
   points.forEach((item, index) => {
     const scale = 0.1
     // 前一个点坐标
-    let nextX, nextY
-    let cAx, cAy, cBx, cBy
+    let nextX: number, nextY: number
+    let cAx: number, cAy: number, cBx: number, cBy: number
     const nowX = item.x
     const nowY = item.y
     if (index === 0) {
@@ -167,9 +168,9 @@ function bezierCurve(points: points, w = 1): void {
 }
 
 // 动态绘制曲线
-let a_id,
+let a_id: Timer,
   p_i = 0
-function dynamicDraw(): void {
+function dynamicDraw() {
   const { points, ctx } = _obj
   if (p_i >= points.length - 1 && a_id) {
     endAni(a_id)
