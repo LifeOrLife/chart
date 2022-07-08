@@ -1,4 +1,4 @@
-import { renderWind, startDrawWind } from './packages/wind'
+import { renderWind, startDrawWind, randomVal } from './packages/wind'
 
 renderWind({
   el: '#wind'
@@ -14,5 +14,16 @@ const winds = [
     height: 1
   }
 ]
-startDrawWind(winds)
-
+const points = Array.from(Array(100)).map(() => {
+  const obj = {
+    x: randomVal(100, 0),
+    y: randomVal(400, 0),
+    vx: randomVal(1.2, 0.1),
+    vy: randomVal(1.2, 0.1),
+    color: '#6cf',
+    width: 1,
+    height: 1
+  }
+  return obj
+})
+startDrawWind(points)

@@ -10,25 +10,16 @@ import { opt } from '../map/index';
 import { getStyle } from '../../utils/getStyle';
 import types from '../../utils/types';
 
-const params: {
-	[key: string]:
-		| string
-		| number
-		| null
-		| undefined
-		| HTMLElement
-		| Element
-		| CanvasRenderingContext2D;
-} = {};
-export function renderWind(options: opt): void {
+const params: Record<string, string | number | null | undefined | HTMLElement | Element | CanvasRenderingContext2D> = {}
+export function renderWind(options: opt) {
 	let el = options.el;
 	if (types.isString(el)) {
-		el = document.querySelector(el as string);
+		el = document.querySelector<HTMLElement>(el as string);
 	}
 	const style = getStyle(el as HTMLElement);
 	const { width, height } = style;
-	params.width = parseInt(width);
-	params.height = parseInt(height);
+	params.width = parseInt(width, 10);
+	params.height = parseInt(height, 10);
 	params.el = el;
 	params.padding = options.padding || 50;
 	initCanvas();
@@ -62,7 +53,7 @@ type points = Array<{
 	vy: number; // y方向移动的速度
 	color: string;
 }>;
-export function startDrawWind(points: points): void {
+export function startDrawWind(points: points) {
 	const ctx = params.ctx as unknown as CanvasRenderingContext2D;
 	const width = params.width as number;
 	const height = params.height as number;
@@ -95,7 +86,7 @@ export function startDrawWind(points: points): void {
 	});
 }
 
-function randomVal(max: number, min: number, isInteger?: boolean): number {
+export function randomVal(max: number, min: number, isInteger?: boolean): number {
 	const v = Math.random() * (max - min) + min;
 	if (isInteger) {
 		return Math.floor(v);
