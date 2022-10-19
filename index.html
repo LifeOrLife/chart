@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/76618355?s=200&v=4" type="image/png" />
+    <title>chart</title>
+    <style>
+      .box {
+        display: flex;
+        flex-wrap: wrap;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/76618355?s=200&v=4" type="image/png" />
-  <title>chart</title>
-  <style>
-    .box {
-      display: flex;
-      flex-wrap: wrap;
-    }
+      .chart {
+        /* width: 800px; */
+        width: 50%;
+        height: 400px;
+      }
 
-    .chart {
-      /* width: 800px; */
-      width: 50%;
-      height: 400px;
-    }
+      .text {
+        width: 120px;
+        height: 400px;
+      }
+    </style>
+  </head>
 
-    .text {
-      width: 120px;
-      height: 400px;
-    }
-
-  </style>
-</head>
-
-<body>
-  <div class="box">
-    <div id="bar" class="chart"></div>
-    <div id="line" class="chart"></div>
-    <div id="pie" class="chart"></div>
-    <div id="map" class="chart"></div>
-    <div id="wind" class="chart"></div>
-    <!-- <canvas id="text" class="text" style="border: 2px solid #6cf"></canvas>
+  <body>
+    <div class="box">
+      <div id="bar" class="chart"></div>
+      <div id="line" class="chart"></div>
+      <div id="pie" class="chart"></div>
+      <div id="map" class="chart"></div>
+      <div id="wind" class="chart"></div>
+      <!-- <canvas id="text" class="text" style="border: 2px solid #6cf"></canvas>
 		<canvas id="text_oth" class="text" style="border: 2px solid #6cf;"></canvas>
 		<div class="text"
 			style="display: inline-block;border: 2px solid #6cf;font-size: 13px;font-family: 微软雅黑;vertical-align: top;">
 			&nbsp;&nbsp;&nbsp;&nbsp;一段文字,另一段文字，又一段文字，还有一段文字。这是第二段文字，再来一段文字，
 			<div>&nbsp;&nbsp;&nbsp;&nbsp;测试文字，测试文字二号</div>
 		</div> -->
-    <!-- <canvas id="ani" class="chart"></canvas> -->
-    <canvas id="windmill" class="chart"></canvas>
-    <canvas id="angel" class="chart"></canvas>
-  </div>
-  <script type="module" src="./src/main.ts"></script>
-  <script type="module" src="./src/rendermap.ts"></script>
-  <script type="module" src="./src/renderwind.ts"></script>
-  <script type="module" src="./src/renderani.ts"></script>
-  <script type="module" src="./src/rendertext.ts"></script>
-  <script type="module" src="./src/renderwindmill.ts"></script>
-  <script type="module" src="./src/renderAngel.ts"></script>
-</body>
-
+      <!-- <canvas id="ani" class="chart"></canvas> -->
+      <canvas id="windmill" class="chart"></canvas>
+      <canvas id="angel" class="chart"></canvas>
+      <div id="graph" class="chart"></div>
+      <div id="tree" class="chart"></div>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+    <script type="module" src="./src/rendermap.ts"></script>
+    <script type="module" src="./src/renderwind.ts"></script>
+    <!-- <script type="module" src="./src/renderani.ts"></script> -->
+    <!-- <script type="module" src="./src/rendertext.ts"></script> -->
+    <script type="module" src="./src/renderwindmill.ts"></script>
+    <script type="module" src="./src/renderAngel.ts"></script>
+    <script type="module" src="./src/renderGraph.ts"></script>
+  </body>
 </html>
