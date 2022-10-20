@@ -16,13 +16,15 @@ type Option = {
   height: number
   x_center: number
   y_center: number
+  linePadding: number // 顶部节点和节点之间的距离
 }
 
 const initOptions: Partial<Option> = {
   font: 15,
   color: '#000',
   lineColor: '#6cf',
-  ratio: window.devicePixelRatio || 1
+  ratio: window.devicePixelRatio || 1,
+  linePadding: 200
 }
 const initRootOption = {
   color: '#000',
@@ -82,7 +84,8 @@ const drawChildNode = (ctx: CanvasRenderingContext2D, nodes: NodeInfo[]) => {
     } else {
       x = (index % num) * (max + 70) + 10 + lens[index] / 2
     }
-    const y = Math.floor(index / num) * (initOptions.font + 20) + 10 + (initOptions.font + 20) + 200
+    // const y = Math.floor(index / num) * (initOptions.font + 20) + 10 + (initOptions.font + 20) + 200
+    const y = initOptions.y_center + (initOptions.linePadding + initOptions.font) / 2 + 20
     return {
       ...node,
       x,
@@ -108,7 +111,7 @@ const drawLine = (ctx: CanvasRenderingContext2D, start: { x: number; y: number }
     }
     const a = {
       x: begin.x,
-      y: (end.y - start.y) / 2 + 50
+      y: (end.y - start.y) / 2 + start.y + 20
     }
     const b = {
       x: end.x,
@@ -137,11 +140,11 @@ export const drawTree = (el: HTMLElement, root: NodeInfo, nodes: NodeInfo[]) => 
   const ctx = cnavas.getContext('2d')!
   el.appendChild(cnavas)
 
-  drawText(ctx, root.text, initOptions.x_center, 50, root.color, root.background)
+  drawText(ctx, root.text, initOptions.x_center, initOptions.y_center - initOptions.linePadding / 2, root.color, root.background)
   const child_node = drawChildNode(ctx, nodes)
   const init = {
     x: initOptions.x_center,
-    y: 50
+    y: initOptions.y_center - initOptions.linePadding / 2
   }
   drawLine(ctx, init, child_node)
 }
